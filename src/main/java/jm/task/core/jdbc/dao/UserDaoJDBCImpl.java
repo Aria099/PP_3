@@ -2,21 +2,14 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-
-import java.sql.SQLException;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.*;
+import java.util.*;
 
 public class UserDaoJDBCImpl implements UserDao {
-    public UserDaoJDBCImpl() {
-    }
 
     private static final Connection conn = Util.getConnection();
+
+    public UserDaoJDBCImpl() { }
 
     @Override
     public void createUsersTable() {
