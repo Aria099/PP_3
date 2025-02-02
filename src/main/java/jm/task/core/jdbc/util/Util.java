@@ -1,5 +1,12 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.model.User;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
+import org.hibernate.service.ServiceRegistry;
+import java.util.Properties;
 import java.sql.*;
 
 public class Util {
@@ -7,34 +14,77 @@ public class Util {
     private static final String URL = "jdbc:mysql://localhost:3306/db1";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
+    private static final String DRIVER = "com.mysql.jdbc.Driver";
 
-    private static Connection conn = null;
+    //private static Connection conn = null;
+    private static SessionFactory sessionFactory = null;
 
     private Util() { }
 
-    public static Connection getConnection() {
-
+    public static SessionFactory getSessionFactory() {
         try {
-            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("We are connected!");
+            Configuration configuration = new Configuration();
+            Properties settings = new Properties();
 
-        } catch (SQLException e) {
-            System.out.println("there is no connection... Exception!");
+            settings.put(Environment.DRIVER, DRIVER);
+            settings.put(Environment.URL, URL);
+            settings.put(Environment.USER, USERNAME);
+            settings.put(Environment.PASS, PASSWORD);
+            settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
+            settings.put(Environment.SHOW_SQL, "true");
+            settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+            settings.put(Environment.HBM2DDL_AUTO, "");
+
+            configuration.setProperties(settings);
+            configuration.addAnnotatedClass(User.class);
+
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties()).build();
+            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+            System.out.println("session+");
+
+        } catch (Exception e) {
+            System.out.println("session-");
+            e.printStackTrace();
         }
-        return conn;
+        return sessionFactory;
     }
 
-    public static void closeConnection() {
-        if (conn != null) {
+    public static void closeSessionFactory() {
+        if (sessionFactory != null) {
             try {
-                conn.close();
-                System.out.println("Connection closed.");
-            } catch (SQLException e) {
-                System.out.println("The connection is not closed.");
+                sessionFactory.close();
+                System.out.println("closed.");
+            } catch (Exception e) {
+                System.out.println("is not closed.");
             }
         }
 
     }
+
+//    public static Connection getConnection() {
+//
+//        try {
+//            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+//            System.out.println("We are connected!");
+//
+//        } catch (SQLException e) {
+//            System.out.println("there is no connection... Exception!");
+//        }
+//        return conn;
+//    }
+//
+//    public static void closeConnection() {
+//        if (conn != null) {
+//            try {
+//                conn.close();
+//                System.out.println("Connection closed.");
+//            } catch (SQLException e) {
+//                System.out.println("The connection is not closed.");
+//            }
+//        }
+//
+//    }
 }
 
 
