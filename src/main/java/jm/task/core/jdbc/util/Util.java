@@ -7,7 +7,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 import java.util.Properties;
-import java.sql.*;
 
 public class Util {
 
@@ -16,7 +15,6 @@ public class Util {
     private static final String PASSWORD = "root";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
 
-    //private static Connection conn = null;
     private static SessionFactory sessionFactory = null;
 
     private Util() { }
@@ -31,9 +29,7 @@ public class Util {
             settings.put(Environment.USER, USERNAME);
             settings.put(Environment.PASS, PASSWORD);
             settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
-            settings.put(Environment.SHOW_SQL, "true");
             settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-            settings.put(Environment.HBM2DDL_AUTO, "");
 
             configuration.setProperties(settings);
             configuration.addAnnotatedClass(User.class);
@@ -59,32 +55,7 @@ public class Util {
                 System.out.println("is not closed.");
             }
         }
-
     }
-
-//    public static Connection getConnection() {
-//
-//        try {
-//            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-//            System.out.println("We are connected!");
-//
-//        } catch (SQLException e) {
-//            System.out.println("there is no connection... Exception!");
-//        }
-//        return conn;
-//    }
-//
-//    public static void closeConnection() {
-//        if (conn != null) {
-//            try {
-//                conn.close();
-//                System.out.println("Connection closed.");
-//            } catch (SQLException e) {
-//                System.out.println("The connection is not closed.");
-//            }
-//        }
-//
-//    }
 }
 
 

@@ -2,6 +2,7 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.ArrayList;
@@ -30,8 +31,7 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction.commit();
             System.out.println("Database has been created!");
 
-        } catch (Exception e) {
-            transaction.rollback();
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
     }
@@ -48,8 +48,7 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction.commit();
             System.out.println("Database has been dropped!");
 
-        } catch (Exception e) {
-            transaction.rollback();
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
 
@@ -68,7 +67,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
             System.out.printf("User с именем — " + name + " добавлен в базу данных\n");
 
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             transaction.rollback();
             e.printStackTrace();
         }
@@ -81,10 +80,12 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction = session.beginTransaction();
 
             User user = session.get(User.class, id);
-            session.delete(user);
+            if (user != null) {
+                session.delete(user);
+            }
             transaction.commit();
 
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             transaction.rollback();
             e.printStackTrace();
         }
@@ -102,8 +103,7 @@ public class UserDaoHibernateImpl implements UserDao {
             for (User user : users) {
                 System.out.println(user);
             }
-        } catch (Exception e) {
-            transaction.rollback();
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
         return users;
@@ -121,8 +121,7 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction.commit();
             System.out.println("Database has been cleaned!");
 
-        } catch (Exception e) {
-            transaction.rollback();
+        } catch (HibernateException e) {
             e.printStackTrace();
         }
 

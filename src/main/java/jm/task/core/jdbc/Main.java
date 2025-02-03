@@ -25,7 +25,6 @@ public class Main {
 
         Util.closeSessionFactory();
 
-        //Util.closeConnection();
     }
 }
 
